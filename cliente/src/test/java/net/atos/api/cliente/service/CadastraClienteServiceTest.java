@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.hasItems;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
@@ -14,7 +15,6 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -32,10 +32,13 @@ import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.domain.EnderecoVO;
 import net.atos.api.cliente.domain.TipoEndereco;
 import net.atos.api.cliente.repository.ClienteRepository;
+import net.atos.api.cliente.repository.entity.ClienteEntity;
 
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -253,7 +256,7 @@ public class CadastraClienteServiceTest {
 	
 	@Test
 	@DisplayName("Testa quando não encontra cliente por Id")
-	void test_consultaPorId_clienteCadastrado_lancaExcecao() {
+	void test_consultaPorIdNaoEncontrado_clienteCadastrado_lancaExcecao() {
 
 		assertNotNull(cadastraClienteService);
 
@@ -262,7 +265,33 @@ public class CadastraClienteServiceTest {
 		var assertThrows = assertThrows(NotFoundException.class, ()->
 				cadastraClienteService.recuperarPorId(idTeste));
 		
+		then(clienteRepository).should(times(1)).findById(anyLong());
+		
 		assertEquals(assertThrows.getMessage(), "Cliente "+ idTeste +" não encontrado");
+		
+	}
+	
+	@Test
+	@DisplayName("Testa quando encontra cliente por Id")
+	void test_consultaPorIdEncontrado_clienteCadastrado_retornaCliente() {
+
+		assertNotNull(cadastraClienteService);
+
+		Long idTeste = 1234l;
+		
+		ClienteEntity clienteEntityTreinado = new ClienteEntity();
+		clienteEntityTreinado.setId(idTeste);
+		
+		when(clienteRepository.findById(anyLong()))
+			.thenReturn(Optional.of(clienteEntityTreinado));
+		
+		ClienteEntity clienteEntity = cadastraClienteService.recuperarPorId(idTeste);
+		
+		then(clienteRepository).should(times(1)).findById(anyLong());
+		
+		assertNotNull(clienteEntity);
+		
+		assertEquals(idTeste, clienteEntity.getId());
 		
 	}
 
