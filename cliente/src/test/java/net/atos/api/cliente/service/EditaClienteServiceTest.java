@@ -1,8 +1,11 @@
 package net.atos.api.cliente.service;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,7 +18,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,21 +35,19 @@ import net.atos.api.cliente.domain.EnderecoVO;
 import net.atos.api.cliente.domain.TipoEndereco;
 import net.atos.api.cliente.repository.ClienteRepository;
 
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.any;
-
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
-public class CadastraClienteServiceTest {
+public class EditaClienteServiceTest {
 
-	private CadastraClienteService cadastraClienteService;
+	private EditaClienteService editaClienteService;
 	
 	private Validator validator;
 	
 	@Mock
 	private ClienteRepository clienteRepository;
-		
+	
+	public EditaClienteServiceTest() {}
+	
 	@BeforeAll
 	public void inicioGeral() {
 		
@@ -60,17 +60,33 @@ public class CadastraClienteServiceTest {
 	@BeforeEach
 	@DisplayName("Teste executado antes cada teste")
 	public void iniciarCadaTeste() {
-		
+
 		this.clienteRepository = Mockito.mock(ClienteRepository.class);
 		
-		cadastraClienteService = new CadastraClienteService(validator, clienteRepository);
+		editaClienteService = new EditaClienteService(validator, clienteRepository);
+	
 	}
+
+	@Test
+	@DisplayName("Testa se Cliente é nulo")
+	void test_ClienteNulo_lancaExcecao() {
+
+		assertNotNull(editaClienteService);
 		
+		ClienteVO cliente = null;
+		
+		var assertThrows = assertThrows(IllegalArgumentException.class, ()->
+				editaClienteService.persistir(cliente));
+		
+		assertNotNull(assertThrows);
+		
+	}
+
 	@Test
 	@DisplayName("Testa obrigatoriedade dos campos de Cliente")
 	void test_CamposObrigatoriosNulos_lancaExcecao() {
-		
-		assertNotNull(cadastraClienteService);
+
+		assertNotNull(editaClienteService);
 		 
 		ClienteVO cliente = new ClienteVO();
 		
@@ -84,7 +100,7 @@ public class CadastraClienteServiceTest {
 		cliente.setEnderecos(new ArrayList<EnderecoVO>());*/
 
 		var assertThrows = assertThrows(ConstraintViolationException.class, ()->
-							cadastraClienteService.persistir(cliente));
+							editaClienteService.persistir(cliente));
 		
 		assertEquals(8, assertThrows.getConstraintViolations().size());
 		
@@ -103,71 +119,12 @@ public class CadastraClienteServiceTest {
 				"Campo endereço não pode ser nulo"));
 		
 	}
-	
-	@Test
-	@DisplayName("Testa se Cliente é nulo")
-	void test_ClienteNulo_lancaExcecao() {
-		
-		assertNotNull(cadastraClienteService);
-		 
-		ClienteVO cliente = null; 
-		//ClienteVO cliente = new ClienteVO(); 
-
-		var assertThrows = assertThrows(IllegalArgumentException.class, ()->
-							cadastraClienteService.persistir(cliente));
-		
-		assertNotNull(assertThrows);
-		
-	}
-	
-	@Test
-	@DisplayName("Testa obrigatoriedade de um endereço")
-	void test_UmEndereco_lancaExcecao() {
-		
-		assertNotNull(cadastraClienteService);
-		
-		ClienteVO cliente = new ClienteVO();
-
-		cliente.setNome("Loki da Silva Oliveira");
-		cliente.setCpf("05362695860");
-		cliente.setRg("20556585221");
-		cliente.setNascimento(LocalDate.now());
-		cliente.setEmail("loki@gmail.com");
-		cliente.setAtivo(true);
-		cliente.setCelular(899554415l);
-		cliente.setEnderecos(new ArrayList<EnderecoVO>());
-		
-		/*EnderecoVO endereco = new EnderecoVO();
-		endereco.setRua("rua do husky");
-		endereco.setNumero("123A");
-		endereco.setBairro("Benjamin Franklin");
-		endereco.setCidade("Cidade dos Anjos");
-		endereco.setUF("CE");
-		endereco.setPais("Brasil");
-		endereco.setCep(65625596);
-		endereco.setTelefone_fixo(835629566);
-		endereco.setTipoEndereco(TipoEndereco.COMERCIAL);
-		cliente.add(endereco);*/
-		
-		var assertThrows = assertThrows(ConstraintViolationException.class, ()->
-				cadastraClienteService.persistir(cliente));
-		
-		assertEquals(1, assertThrows.getConstraintViolations().size());
-
-		List<String> mensagens = assertThrows.getConstraintViolations()
-			.stream()
-			.map(ConstraintViolation::getMessage)
-			.collect(Collectors.toList());
-
-		assertThat(mensagens, hasItems("Campo endereço deve ter pelo menos um item"));
-		
-	}
 
 	@Test
 	@DisplayName("Testa obrigatoriedade dos campos de um endereço")
 	void test_enderecoComCamposNulos_lancaExcecao() {
 		
-		assertNotNull(cadastraClienteService);
+		assertNotNull(editaClienteService);
 		
 		ClienteVO cliente = new ClienteVO();
 		
@@ -194,7 +151,7 @@ public class CadastraClienteServiceTest {
 		cliente.add(endereco);
 		
 		var assertThrows = assertThrows(ConstraintViolationException.class, ()->
-				cadastraClienteService.persistir(cliente));
+				editaClienteService.persistir(cliente));
 		
 		assertEquals(9, assertThrows.getConstraintViolations().size());
 
@@ -214,12 +171,12 @@ public class CadastraClienteServiceTest {
 				"Campo tipo Endereco não pode ser nulo"));
 		
 	}
-
+	
 	@Test
-	@DisplayName("Testa persistência do cliente")
-	void test_dadosClientePreenchidos_clienteCadastrado() {
+	@DisplayName("Testa se o Id do cliente é nulo")
+	void test_dadosClientePreenchidos_clienteEditado() {
 
-		assertNotNull(cadastraClienteService);
+		assertNotNull(editaClienteService);
 		
 		ClienteVO cliente = new ClienteVO();
 		
@@ -245,24 +202,12 @@ public class CadastraClienteServiceTest {
 		
 		cliente.add(endereco);
 		
-		cadastraClienteService.persistir(cliente);
+		var assertThrows = assertThrows(BadRequestException.class, ()->
+				editaClienteService.persistir(cliente));
 		
-		then(clienteRepository).should(times(1)).save(any());
+		then(clienteRepository).should(times(0)).save(any());
 		
-	}
-	
-	@Test
-	@DisplayName("Testa quando não encontra cliente por Id")
-	void test_consultaPorId_clienteCadastrado_lancaExcecao() {
-
-		assertNotNull(cadastraClienteService);
-
-		Long idTeste = 5648l;
-		
-		var assertThrows = assertThrows(NotFoundException.class, ()->
-				cadastraClienteService.recuperarPorId(idTeste));
-		
-		assertEquals(assertThrows.getMessage(), "Cliente "+ idTeste +" não encontrado");
+		assertEquals(assertThrows.getMessage(), "Identificador de cliente inválido");
 		
 	}
 

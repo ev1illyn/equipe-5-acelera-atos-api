@@ -6,10 +6,11 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.NotFoundException;
+import javax.ws.rs.BadRequestException;
 
 import org.springframework.stereotype.Service;
+
+import com.sun.istack.NotNull;
 
 import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.factory.ClienteFactory;
@@ -17,38 +18,35 @@ import net.atos.api.cliente.repository.ClienteRepository;
 import net.atos.api.cliente.repository.entity.ClienteEntity;
 
 @Service
-public class CadastraClienteService {
-
+public class EditaClienteService {
+	
 	private Validator validator;
-	
 	private ClienteRepository clienteRepository;
-	
-	public CadastraClienteService(Validator validator, ClienteRepository repository) {
+
+	public EditaClienteService(Validator validator, ClienteRepository clienteRepository) {
 		this.validator = validator;
-		this.clienteRepository = repository;
+		this.clienteRepository = clienteRepository;
 	}
-	
-	public ClienteVO persistir(@NotNull(message = "Cliente não pode ser nulo") ClienteVO cliente) {
-		
+
+	public Object persistir(@NotNull ClienteVO cliente) {
+
 		Set<ConstraintViolation<ClienteVO>>
 			validate = this.validator.validate(cliente);
-		
+
 		if(!validate.isEmpty()) {
 			throw new ConstraintViolationException("Cliente Inválido", validate);
 		}
 		
+		Optional.ofNullable(cliente.getId())
+			.orElseThrow(()->new BadRequestException("Identificador de cliente inválido"));
+		
+		this.clienteRepository.findById(cliente.getId());
+
 		ClienteEntity clienteEntity = new ClienteFactory(cliente).toEntity();
 		
-		clienteRepository.save(clienteEntity);
-		cliente.setId(clienteEntity.getId());
-		return cliente;
+		this.clienteRepository.save(clienteEntity);
 		
-	}
-	
-	public ClienteEntity recuperarPorId(Long id) {
-		return this.clienteRepository.findById(id)
-				.orElseThrow(()-> new NotFoundException("Cliente "+ id +" não encontrado"));
+		return cliente;
 	}
 
 }
-	
