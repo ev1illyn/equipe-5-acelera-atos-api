@@ -43,10 +43,6 @@ public class ClienteEntity {
 	@NotNull(message = "Campo email não pode ser nulo")
 	private String email;
 
-	@Column(name = "ATIVO_CLIENTE")
-	@NotNull(message = "Campo ativo não pode ser nulo")
-	private Boolean ativo;
-
 	@Column(name = "CELULAR_CLIENTE")
 	@NotNull(message = "Campo celular não pode ser nulo")
 	private Long celular;
@@ -94,12 +90,6 @@ public class ClienteEntity {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Boolean getAtivo() {
-		return ativo;
-	}
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
 	public Long getCelular() {
 		return celular;
 	}
@@ -123,8 +113,8 @@ public class ClienteEntity {
 	}
 	@Override
 	public String toString() {
-		return "ClienteVO [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", rg=" + rg + ", nascimento=" + nascimento
-				+ ", email=" + email + ", ativo=" + ativo + ", celular=" + celular + ", enderecos=" + enderecos + "]";
+		return "ClienteEntity [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", rg=" + rg + ", nascimento="
+				+ nascimento + ", email=" + email + ", celular=" + celular + ", enderecos=" + enderecos + "]";
 	}
 	
 }

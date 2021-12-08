@@ -22,6 +22,7 @@ public class EditaClienteService {
 	
 	private Validator validator;
 	private ClienteRepository clienteRepository;
+	private BuscaClienteService buscaClienteService;
 
 	public EditaClienteService(Validator validator, ClienteRepository clienteRepository) {
 		this.validator = validator;
@@ -36,11 +37,11 @@ public class EditaClienteService {
 		if(!validate.isEmpty()) {
 			throw new ConstraintViolationException("Cliente Inválido", validate);
 		}
-		
-		Optional.ofNullable(cliente.getId())
+		 
+		Optional.ofNullable(cliente.getId()) 
 			.orElseThrow(()->new BadRequestException("Identificador de cliente inválido"));
 		
-		this.clienteRepository.findById(cliente.getId());
+		buscaClienteService.recuperarPorId(cliente.getId());
 
 		ClienteEntity clienteEntity = new ClienteFactory(cliente).toEntity();
 		

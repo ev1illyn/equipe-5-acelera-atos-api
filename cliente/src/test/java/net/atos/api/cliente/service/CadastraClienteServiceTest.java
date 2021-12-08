@@ -82,14 +82,13 @@ public class CadastraClienteServiceTest {
 		cliente.setRg("20556585221");
 		cliente.setNascimento(LocalDate.now());
 		cliente.setEmail("loki@gmail.com");
-		cliente.setAtivo(true);
 		cliente.setCelular(899554415l);
 		cliente.setEnderecos(new ArrayList<EnderecoVO>());*/
 
 		var assertThrows = assertThrows(ConstraintViolationException.class, ()->
 							cadastraClienteService.persistir(cliente));
 		
-		assertEquals(8, assertThrows.getConstraintViolations().size());
+		assertEquals(7, assertThrows.getConstraintViolations().size());
 		
 		List<String> mensagens = assertThrows.getConstraintViolations()
 			.stream()
@@ -101,7 +100,6 @@ public class CadastraClienteServiceTest {
 				"Campo rg não pode ser nulo",
 				"Campo nascimento não pode ser nulo",
 				"Campo email não pode ser nulo",
-				"Campo ativo não pode ser nulo",
 				"Campo celular não pode ser nulo",
 				"Campo endereço não pode ser nulo"));
 		
@@ -136,7 +134,6 @@ public class CadastraClienteServiceTest {
 		cliente.setRg("20556585221");
 		cliente.setNascimento(LocalDate.now());
 		cliente.setEmail("loki@gmail.com");
-		cliente.setAtivo(true);
 		cliente.setCelular(899554415l);
 		cliente.setEnderecos(new ArrayList<EnderecoVO>());
 		
@@ -179,7 +176,6 @@ public class CadastraClienteServiceTest {
 		cliente.setRg("20556585221");
 		cliente.setNascimento(LocalDate.now());
 		cliente.setEmail("loki@gmail.com");
-		cliente.setAtivo(true);
 		cliente.setCelular(899554415l);
 		cliente.setEnderecos(new ArrayList<EnderecoVO>());
 		
@@ -231,7 +227,6 @@ public class CadastraClienteServiceTest {
 		cliente.setRg("20556585221");
 		cliente.setNascimento(LocalDate.now());
 		cliente.setEmail("loki@gmail.com");
-		cliente.setAtivo(true);
 		cliente.setCelular(899554415l);
 		cliente.setEnderecos(new ArrayList<EnderecoVO>());
 		
@@ -254,45 +249,4 @@ public class CadastraClienteServiceTest {
 		
 	}
 	
-	@Test
-	@DisplayName("Testa quando não encontra cliente por Id")
-	void test_consultaPorIdNaoEncontrado_clienteCadastrado_lancaExcecao() {
-
-		assertNotNull(cadastraClienteService);
-
-		Long idTeste = 5648l;
-		
-		var assertThrows = assertThrows(NotFoundException.class, ()->
-				cadastraClienteService.recuperarPorId(idTeste));
-		
-		then(clienteRepository).should(times(1)).findById(anyLong());
-		
-		assertEquals(assertThrows.getMessage(), "Cliente "+ idTeste +" não encontrado");
-		
-	}
-	
-	@Test
-	@DisplayName("Testa quando encontra cliente por Id")
-	void test_consultaPorIdEncontrado_clienteCadastrado_retornaCliente() {
-
-		assertNotNull(cadastraClienteService);
-
-		Long idTeste = 1234l;
-		
-		ClienteEntity clienteEntityTreinado = new ClienteEntity();
-		clienteEntityTreinado.setId(idTeste);
-		
-		when(clienteRepository.findById(anyLong()))
-			.thenReturn(Optional.of(clienteEntityTreinado));
-		
-		ClienteEntity clienteEntity = cadastraClienteService.recuperarPorId(idTeste);
-		
-		then(clienteRepository).should(times(1)).findById(anyLong());
-		
-		assertNotNull(clienteEntity);
-		
-		assertEquals(idTeste, clienteEntity.getId());
-		
-	}
-
 }

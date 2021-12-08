@@ -29,9 +29,6 @@ public class ClienteVO {
 	@NotNull(message = "Campo email não pode ser nulo")
 	private String email;
 	
-	@NotNull(message = "Campo ativo não pode ser nulo")
-	private Boolean ativo;
-	
 	@NotNull(message = "Campo celular não pode ser nulo")
 	private Long celular;
 	
@@ -76,12 +73,6 @@ public class ClienteVO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Boolean getAtivo() {
-		return ativo;
-	}
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
 	public Long getCelular() {
 		return celular;
 	}
@@ -106,7 +97,7 @@ public class ClienteVO {
 	@Override
 	public String toString() {
 		return "ClienteVO [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", rg=" + rg + ", nascimento=" + nascimento
-				+ ", email=" + email + ", ativo=" + ativo + ", celular=" + celular + ", enderecos=" + enderecos + "]";
+				+ ", email=" + email + ", celular=" + celular + ", enderecos=" + enderecos + "]";
 	}
 	
 }

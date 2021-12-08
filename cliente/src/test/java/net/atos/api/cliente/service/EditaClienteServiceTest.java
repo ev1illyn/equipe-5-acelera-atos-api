@@ -95,14 +95,13 @@ public class EditaClienteServiceTest {
 		cliente.setRg("20556585221");
 		cliente.setNascimento(LocalDate.now());
 		cliente.setEmail("loki@gmail.com");
-		cliente.setAtivo(true);
 		cliente.setCelular(899554415l);
 		cliente.setEnderecos(new ArrayList<EnderecoVO>());*/
 
 		var assertThrows = assertThrows(ConstraintViolationException.class, ()->
 							editaClienteService.persistir(cliente));
 		
-		assertEquals(8, assertThrows.getConstraintViolations().size());
+		assertEquals(7, assertThrows.getConstraintViolations().size());
 		
 		List<String> mensagens = assertThrows.getConstraintViolations()
 			.stream()
@@ -114,7 +113,6 @@ public class EditaClienteServiceTest {
 				"Campo rg não pode ser nulo",
 				"Campo nascimento não pode ser nulo",
 				"Campo email não pode ser nulo",
-				"Campo ativo não pode ser nulo",
 				"Campo celular não pode ser nulo",
 				"Campo endereço não pode ser nulo"));
 		
@@ -133,7 +131,6 @@ public class EditaClienteServiceTest {
 		cliente.setRg("20556585221");
 		cliente.setNascimento(LocalDate.now());
 		cliente.setEmail("loki@gmail.com");
-		cliente.setAtivo(true);
 		cliente.setCelular(899554415l);
 		cliente.setEnderecos(new ArrayList<EnderecoVO>());
 		
@@ -185,7 +182,6 @@ public class EditaClienteServiceTest {
 		cliente.setRg("20556585221");
 		cliente.setNascimento(LocalDate.now());
 		cliente.setEmail("loki@gmail.com");
-		cliente.setAtivo(true);
 		cliente.setCelular(899554415l);
 		cliente.setEnderecos(new ArrayList<EnderecoVO>());
 		

@@ -1,6 +1,5 @@
 package net.atos.api.cliente.service;
 
-import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;

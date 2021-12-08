@@ -30,7 +30,6 @@ public class ClienteFactory {
 		clienteEntity.setRg(cliente.getRg());
 		clienteEntity.setNascimento(cliente.getNascimento());
 		clienteEntity.setEmail(cliente.getEmail());
-		clienteEntity.setAtivo(cliente.getAtivo());
 		clienteEntity.setCelular(cliente.getCelular());
 		
 		AtomicLong codigoEndereco = new AtomicLong();
