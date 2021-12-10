@@ -7,8 +7,11 @@ import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -20,6 +23,10 @@ public class ClienteEntity {
 
 	@Id
 	@Column(name = "ID_CLIENTE")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_cliente")
+	@SequenceGenerator(name = "sq_cliente",sequenceName = "sq_cliente",
+    allocationSize = 1,
+    initialValue = 1)
 	private Long id;
 
 	@Column(name = "NOME_CLIENTE")

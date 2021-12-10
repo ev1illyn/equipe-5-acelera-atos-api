@@ -7,7 +7,6 @@ import static org.hamcrest.Matchers.hasItems;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
@@ -15,7 +14,6 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import javax.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,10 +30,8 @@ import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.domain.EnderecoVO;
 import net.atos.api.cliente.domain.TipoEndereco;
 import net.atos.api.cliente.repository.ClienteRepository;
-import net.atos.api.cliente.repository.entity.ClienteEntity;
 
 import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -215,13 +211,13 @@ public class CadastraClienteServiceTest {
 	}
 
 	@Test
-	@DisplayName("Testa persistência do cliente")
+	@DisplayName("Testa persistência do cadastro do cliente")
 	void test_dadosClientePreenchidos_clienteCadastrado() {
 
 		assertNotNull(cadastraClienteService);
 		
 		ClienteVO cliente = new ClienteVO();
-		
+		cliente.setId(123l);
 		cliente.setNome("Loki da Silva Oliveira");
 		cliente.setCpf("05362695860");
 		cliente.setRg("20556585221");
@@ -231,6 +227,7 @@ public class CadastraClienteServiceTest {
 		cliente.setEnderecos(new ArrayList<EnderecoVO>());
 		
 		EnderecoVO endereco = new EnderecoVO();
+		endereco.setId(123l);
 		endereco.setRua("rua do husky");
 		endereco.setNumero("123A");
 		endereco.setBairro("Benjamin Franklin");

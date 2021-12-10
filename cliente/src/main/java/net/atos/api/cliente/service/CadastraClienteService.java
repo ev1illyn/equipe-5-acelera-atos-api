@@ -28,7 +28,7 @@ public class CadastraClienteService {
 	}
 	
 	public ClienteVO persistir(@NotNull(message = "Cliente não pode ser nulo") ClienteVO cliente) {
-		
+        
 		Set<ConstraintViolation<ClienteVO>>
 			validate = this.validator.validate(cliente);
 		
@@ -40,6 +40,7 @@ public class CadastraClienteService {
 		
 		clienteRepository.save(clienteEntity);
 		cliente.setId(clienteEntity.getId());
+
 		return cliente;
 		
 	}

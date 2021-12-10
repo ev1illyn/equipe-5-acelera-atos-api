@@ -4,12 +4,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
@@ -33,13 +36,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.domain.EnderecoVO;
 import net.atos.api.cliente.domain.TipoEndereco;
+import net.atos.api.cliente.factory.ClienteFactory;
 import net.atos.api.cliente.repository.ClienteRepository;
+import net.atos.api.cliente.repository.entity.ClienteEntity;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
 public class EditaClienteServiceTest {
 
 	private EditaClienteService editaClienteService;
+	
+	private CadastraClienteService cadastraClienteService;
+	
+	private BuscaClienteService buscaClienteService;
 	
 	private Validator validator;
 	
@@ -64,7 +73,8 @@ public class EditaClienteServiceTest {
 		this.clienteRepository = Mockito.mock(ClienteRepository.class);
 		
 		editaClienteService = new EditaClienteService(validator, clienteRepository);
-	
+		cadastraClienteService = new CadastraClienteService(validator, clienteRepository);
+		buscaClienteService = new BuscaClienteService(validator, clienteRepository);
 	}
 
 	@Test
@@ -176,7 +186,7 @@ public class EditaClienteServiceTest {
 		assertNotNull(editaClienteService);
 		
 		ClienteVO cliente = new ClienteVO();
-		
+
 		cliente.setNome("Loki da Silva Oliveira");
 		cliente.setCpf("05362695860");
 		cliente.setRg("20556585221");
@@ -204,6 +214,56 @@ public class EditaClienteServiceTest {
 		then(clienteRepository).should(times(0)).save(any());
 		
 		assertEquals(assertThrows.getMessage(), "Identificador de cliente inválido");
+		
+	}
+
+	@Test
+	@DisplayName("Testa persistência da edição do cliente")
+	void test_dadosClientePreenchidos_clienteCadastrado() {
+
+		//ainda não terminado
+		
+		assertNotNull(editaClienteService);
+		
+		ClienteVO cliente = new ClienteVO();
+		cliente.setNome("Loki da Silva Oliveira");
+		cliente.setCpf("05362695860");
+		cliente.setRg("20556585221");
+		cliente.setNascimento(LocalDate.now());
+		cliente.setEmail("loki@gmail.com");
+		cliente.setCelular(899554415l);
+		cliente.setEnderecos(new ArrayList<EnderecoVO>());
+		
+		EnderecoVO endereco = new EnderecoVO();
+		endereco.setRua("rua do husky");
+		endereco.setNumero("123A");
+		endereco.setBairro("Benjamin Franklin");
+		endereco.setCidade("Cidade dos Anjos");
+		endereco.setUF("CE");
+		endereco.setPais("Brasil");
+		endereco.setCep(65625596);
+		endereco.setTelefone_fixo(835629566);
+		endereco.setTipoEndereco(TipoEndereco.COMERCIAL);
+		
+		cliente.add(endereco);
+		
+		ClienteEntity clienteEntity = new ClienteEntity();
+		clienteEntity.setId(3l);
+
+        when(buscaClienteService.recuperarPorId(anyLong()))
+        	.thenReturn(clienteEntity);
+        
+        when(this.clienteRepository.findById(anyLong()))
+			.thenReturn(Optional.empty());
+		
+        ClienteVO clienteVO = editaClienteService.persistir(cliente);
+        
+        then(buscaClienteService).should(times(1)).recuperarPorId(anyLong());
+        
+		then(clienteRepository).should(times(1)).findById(anyLong());
+		then(clienteRepository).should(times(1)).save(any());
+
+		assertNotNull(clienteVO);
 		
 	}
 
