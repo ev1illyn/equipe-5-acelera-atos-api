@@ -32,6 +32,7 @@ public class ClienteFactory {
 
 		ClienteVO clienteVO = new ClienteVO();
 
+		clienteVO.setId(entity.getId());
 		clienteVO.setNome(entity.getNome());
 		clienteVO.setCpf(entity.getCpf());
 		clienteVO.setRg(entity.getRg());
@@ -70,6 +71,7 @@ public class ClienteFactory {
 
 		ClienteEntity clienteEntity = new ClienteEntity();
 
+		clienteEntity.setId(cliente.getId());
 		clienteEntity.setNome(cliente.getNome());
 		clienteEntity.setCpf(cliente.getCpf());
 		clienteEntity.setRg(cliente.getRg());
@@ -92,6 +94,7 @@ public class ClienteFactory {
 	}
 	
 	private void construirEnderecoEntity(ClienteEntity clienteEntity, AtomicLong codigoEndereco, EnderecoVO endereco) {
+		
 		EnderecoEntity enderecoEntity = new EnderecoEntity();
 		
 		enderecoEntity.setId(new EnderecoPK());	
@@ -107,6 +110,8 @@ public class ClienteFactory {
 		enderecoEntity.setCep(endereco.getCep());
 		enderecoEntity.setTelefone_fixo(endereco.getTelefone_fixo());
 		enderecoEntity.setTipoEndereco(endereco.getTipoEndereco());
+		
+		clienteEntity.add(enderecoEntity);
 	}
 
 	public ClienteEntity toEntity() {

@@ -1,5 +1,7 @@
 package net.atos.api.cliente.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -8,9 +10,12 @@ import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.NotFoundException;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Service;
 
 import net.atos.api.cliente.domain.ClienteVO;
+import net.atos.api.cliente.domain.EnderecoVO;
+import net.atos.api.cliente.domain.TipoEndereco;
 import net.atos.api.cliente.factory.ClienteFactory;
 import net.atos.api.cliente.repository.ClienteRepository;
 import net.atos.api.cliente.repository.entity.ClienteEntity;
@@ -49,6 +54,6 @@ public class CadastraClienteService {
 		return this.clienteRepository.findById(id)
 				.orElseThrow(()-> new NotFoundException("Cliente "+ id +" não encontrado"));
 	}
-
+	
 }
 	

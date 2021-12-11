@@ -24,9 +24,11 @@ public class EditaClienteService {
 	private ClienteRepository clienteRepository;
 	private BuscaClienteService buscaClienteService;
 
-	public EditaClienteService(Validator validator, ClienteRepository clienteRepository) {
+	public EditaClienteService(Validator validator, ClienteRepository clienteRepository, 
+			BuscaClienteService buscaClienteService) {
 		this.validator = validator;
 		this.clienteRepository = clienteRepository;
+		this.buscaClienteService = buscaClienteService;
 	}
 
 	public ClienteVO persistir(@NotNull ClienteVO cliente) {

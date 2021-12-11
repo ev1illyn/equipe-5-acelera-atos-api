@@ -72,9 +72,9 @@ public class EditaClienteServiceTest {
 
 		this.clienteRepository = Mockito.mock(ClienteRepository.class);
 		
-		editaClienteService = new EditaClienteService(validator, clienteRepository);
 		cadastraClienteService = new CadastraClienteService(validator, clienteRepository);
 		buscaClienteService = new BuscaClienteService(validator, clienteRepository);
+		editaClienteService = new EditaClienteService(validator, clienteRepository, buscaClienteService);
 	}
 
 	@Test
@@ -226,6 +226,7 @@ public class EditaClienteServiceTest {
 		assertNotNull(editaClienteService);
 		
 		ClienteVO cliente = new ClienteVO();
+		cliente.setId(3l);
 		cliente.setNome("Loki da Silva Oliveira");
 		cliente.setCpf("05362695860");
 		cliente.setRg("20556585221");
@@ -246,20 +247,17 @@ public class EditaClienteServiceTest {
 		endereco.setTipoEndereco(TipoEndereco.COMERCIAL);
 		
 		cliente.add(endereco);
-		
-		ClienteEntity clienteEntity = new ClienteEntity();
-		clienteEntity.setId(3l);
+				
+		ClienteEntity clienteEntity = new ClienteFactory(cliente).toEntity();
 
-        when(buscaClienteService.recuperarPorId(anyLong()))
-        	.thenReturn(clienteEntity);
+        when(clienteRepository.findById(anyLong()))
+        	.thenReturn(Optional.of(clienteEntity));
         
-        when(this.clienteRepository.findById(anyLong()))
-			.thenReturn(Optional.empty());
-		
-        ClienteVO clienteVO = editaClienteService.persistir(cliente);
+        ClienteVO clienteVO = new ClienteFactory(clienteEntity).toVO();
+        clienteVO.setNome("testando");
         
-        then(buscaClienteService).should(times(1)).recuperarPorId(anyLong());
-        
+        clienteVO = editaClienteService.persistir(clienteVO);
+                
 		then(clienteRepository).should(times(1)).findById(anyLong());
 		then(clienteRepository).should(times(1)).save(any());
 
