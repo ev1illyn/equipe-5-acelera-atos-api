@@ -29,7 +29,6 @@ public class ClienteFactory {
 	
 	private ClienteVO transformaVO(ClienteEntity entity) {
 		
-
 		ClienteVO clienteVO = new ClienteVO();
 
 		clienteVO.setId(entity.getId());

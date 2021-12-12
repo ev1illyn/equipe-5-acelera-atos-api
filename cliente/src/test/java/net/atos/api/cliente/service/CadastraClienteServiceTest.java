@@ -34,7 +34,6 @@ import net.atos.api.cliente.repository.ClienteRepository;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
