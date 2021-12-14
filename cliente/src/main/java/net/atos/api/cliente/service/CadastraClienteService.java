@@ -45,7 +45,6 @@ public class CadastraClienteService {
 		
 		ClienteEntity clienteEntity = new ClienteFactory(cliente).toEntity();
 		
-		//clienteRepository.save(clienteEntity);
 		clienteEntity = clienteRepository.save(clienteEntity);
 		
 		cliente.setId(clienteEntity.getId());

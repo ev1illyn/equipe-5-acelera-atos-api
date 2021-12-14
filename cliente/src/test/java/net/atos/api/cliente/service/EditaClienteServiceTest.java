@@ -79,11 +79,12 @@ public class EditaClienteServiceTest {
 	void test_ClienteNulo_lancaExcecao() {
 
 		assertNotNull(editaClienteService);
-		
+
+		Long clienteId = 123l;
 		ClienteVO cliente = null;
 		
 		var assertThrows = assertThrows(IllegalArgumentException.class, ()->
-				editaClienteService.persistir(cliente));
+				editaClienteService.persistir(clienteId, cliente));
 		
 		assertNotNull(assertThrows);
 		
@@ -94,7 +95,8 @@ public class EditaClienteServiceTest {
 	void test_CamposObrigatoriosNulos_lancaExcecao() {
 
 		assertNotNull(editaClienteService);
-		 
+
+		Long clienteId = 123l;
 		ClienteVO cliente = new ClienteVO();
 		
 		/*cliente.setNome("Loki da Silva Oliveira");
@@ -106,7 +108,7 @@ public class EditaClienteServiceTest {
 		cliente.setEnderecos(new ArrayList<EnderecoVO>());*/
 
 		var assertThrows = assertThrows(ConstraintViolationException.class, ()->
-							editaClienteService.persistir(cliente));
+							editaClienteService.persistir(clienteId, cliente));
 		
 		assertEquals(7, assertThrows.getConstraintViolations().size());
 		
@@ -130,7 +132,8 @@ public class EditaClienteServiceTest {
 	void test_enderecoComCamposNulos_lancaExcecao() {
 		
 		assertNotNull(editaClienteService);
-		
+
+		Long clienteId = 123l;
 		ClienteVO cliente = new ClienteVO();
 		
 		cliente.setNome("Loki da Silva Oliveira");
@@ -155,7 +158,7 @@ public class EditaClienteServiceTest {
 		cliente.add(endereco);
 		
 		var assertThrows = assertThrows(ConstraintViolationException.class, ()->
-				editaClienteService.persistir(cliente));
+				editaClienteService.persistir(clienteId, cliente));
 		
 		assertEquals(9, assertThrows.getConstraintViolations().size());
 
@@ -181,7 +184,9 @@ public class EditaClienteServiceTest {
 	void test_dadosClientePreenchidos_clienteEditado() {
 
 		assertNotNull(editaClienteService);
-		
+
+		Long clienteId = null;
+		//Long clienteId = 123l;		
 		ClienteVO cliente = new ClienteVO();
 
 		cliente.setNome("Loki da Silva Oliveira");
@@ -206,7 +211,7 @@ public class EditaClienteServiceTest {
 		cliente.add(endereco);
 		
 		var assertThrows = assertThrows(BadRequestException.class, ()->
-				editaClienteService.persistir(cliente));
+				editaClienteService.persistir(clienteId, cliente));
 		
 		then(clienteRepository).should(times(0)).save(any());
 		
@@ -222,7 +227,9 @@ public class EditaClienteServiceTest {
 		
 		assertNotNull(editaClienteService);
 		
+		Long clienteId = 123l;
 		ClienteVO cliente = new ClienteVO();
+		
 		cliente.setId(3l);
 		cliente.setNome("Loki da Silva Oliveira");
 		cliente.setCpf("05362695860");
@@ -247,13 +254,13 @@ public class EditaClienteServiceTest {
 				
 		ClienteEntity clienteEntity = new ClienteFactory(cliente).toEntity();
 
-        when(clienteRepository.findById(anyLong()))
+        when(clienteRepository.findById(clienteId))
         	.thenReturn(Optional.of(clienteEntity));
         
         ClienteVO clienteVO = new ClienteFactory(clienteEntity).toVO();
         clienteVO.setNome("testando");
         
-        clienteVO = editaClienteService.persistir(clienteVO);
+        clienteVO = editaClienteService.persistir(clienteId, clienteVO);
                 
 		then(clienteRepository).should(times(1)).findById(anyLong());
 		then(clienteRepository).should(times(1)).save(any());

@@ -5,10 +5,12 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.ws.rs.BadRequestException;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sun.istack.NotNull;
 
@@ -31,7 +33,8 @@ public class EditaClienteService {
 		this.buscaClienteService = buscaClienteService;
 	}
 
-	public ClienteVO persistir(@NotNull ClienteVO cliente) {
+	@Transactional
+	public ClienteVO persistir(@Valid Long clienteId, @NotNull ClienteVO cliente) {
 
 		Set<ConstraintViolation<ClienteVO>>
 			validate = this.validator.validate(cliente);
@@ -43,12 +46,16 @@ public class EditaClienteService {
 		Optional.ofNullable(cliente.getId()) 
 			.orElseThrow(()->new BadRequestException("Identificador de cliente inválido"));
 		
-		buscaClienteService.recuperarPorId(cliente.getId());
+		buscaClienteService.recuperarPorId(clienteId);
 
-		ClienteEntity clienteEntity = new ClienteFactory(cliente).toEntity();
+		cliente.setId(clienteId);
 		
+		ClienteEntity clienteEntity = new ClienteFactory(cliente).toEntity();
+			
 		clienteRepository.save(clienteEntity);
-		cliente.setId(clienteEntity.getId());		
+		
+		//cliente.setId(clienteEntity.getId());
+		
 		return cliente;
 	}
 
