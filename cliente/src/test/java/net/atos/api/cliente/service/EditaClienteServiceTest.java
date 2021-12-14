@@ -186,7 +186,7 @@ public class EditaClienteServiceTest {
 		assertNotNull(editaClienteService);
 
 		Long clienteId = null;
-		//Long clienteId = 123l;		
+		//Long clienteId = 123l;
 		ClienteVO cliente = new ClienteVO();
 
 		cliente.setNome("Loki da Silva Oliveira");
@@ -222,8 +222,6 @@ public class EditaClienteServiceTest {
 	@Test
 	@DisplayName("Testa persistência da edição do cliente")
 	void test_dadosClientePreenchidos_clienteCadastrado() {
-
-		//ainda não terminado
 		
 		assertNotNull(editaClienteService);
 		
