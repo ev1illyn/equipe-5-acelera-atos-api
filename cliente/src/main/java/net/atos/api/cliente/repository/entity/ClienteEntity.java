@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -58,7 +59,7 @@ public class ClienteEntity {
 	@NotNull(message = "Campo endereço não pode ser nulo")
 	@Size(min = 1, message = "Campo endereço deve ter pelo menos um item")
 	@Valid
-	@OneToMany(mappedBy = "id.cliente")
+	@OneToMany(mappedBy = "id.cliente", cascade = CascadeType.ALL)
 	private List<EnderecoEntity> enderecos;
 	
 	public Long getId() {

@@ -30,9 +30,11 @@ import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.domain.EnderecoVO;
 import net.atos.api.cliente.domain.TipoEndereco;
 import net.atos.api.cliente.repository.ClienteRepository;
+import net.atos.api.cliente.repository.entity.ClienteEntity;
 
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -216,7 +218,6 @@ public class CadastraClienteServiceTest {
 		assertNotNull(cadastraClienteService);
 		
 		ClienteVO cliente = new ClienteVO();
-		cliente.setId(123l);
 		cliente.setNome("Loki da Silva Oliveira");
 		cliente.setCpf("05362695860");
 		cliente.setRg("20556585221");
@@ -238,6 +239,11 @@ public class CadastraClienteServiceTest {
 		endereco.setTipoEndereco(TipoEndereco.COMERCIAL);
 		
 		cliente.add(endereco);
+		
+		ClienteEntity clienteEntity = new ClienteEntity();
+		clienteEntity.setId(1l);
+		
+		when(clienteRepository.save(any())).thenReturn(clienteEntity);
 		
 		cadastraClienteService.persistir(cliente);
 		

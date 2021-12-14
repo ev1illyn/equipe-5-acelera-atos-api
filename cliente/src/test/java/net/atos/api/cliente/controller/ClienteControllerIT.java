@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -37,16 +38,18 @@ import net.atos.api.cliente.domain.TipoEndereco;
 @TestInstance(Lifecycle.PER_CLASS)
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
-class ClienteControllerIntegrationTest {
+class ClienteControllerIT {
 
-	private static final String URI_NOTA_FISCAL = "/v1/clientes";
+	private static final String URI_CLIENTES= "/v1/clientes";
 	
 	@Autowired
 	private WebApplicationContext wac;
 
+	//transforma objeto em json e vice-versa
 	@Autowired
 	private ObjectMapper mapper;
 	
+	//mockar
 	private MockMvc mockMvc;
 	
 	@BeforeAll
@@ -82,23 +85,40 @@ class ClienteControllerIntegrationTest {
 		
 		cliente.add(endereco);
 		
-		this.mockMvc.perform(
-				MockMvcRequestBuilders.post(URI_NOTA_FISCAL)
+		ResultActions resultCreated = this.mockMvc.perform(
+				MockMvcRequestBuilders.post(URI_CLIENTES)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(cliente))
 				).andDo(print())
 				.andExpect(status().isCreated());
+		
+		ClienteVO clienteCadastrado = mapper.readValue(resultCreated
+				.andReturn()
+				.getResponse()
+				.getContentAsString(), 
+				ClienteVO.class);
+		
+		this.mockMvc.perform(
+				MockMvcRequestBuilders.get(URI_CLIENTES.concat("/{id}"),
+						clienteCadastrado.getId()))
+    					.andDo(print())
+    					.andExpect(status().isOk());
+	
 	}
 	
 	@Test
+	@Disabled
 	@DisplayName("Envio de nota fiscal sem os campos obrigatórios")
 	public void test_envioCamposSemDadosCadastroCliente_retorna400() throws Exception {
 		 
 		ClienteVO cliente = new ClienteVO();
 		
+		
+		/* mock performa um builder de requisição do tipo post com esses atributos que
+		espera uma exceção do tipo bad request*/
 		this.mockMvc.perform(
-				MockMvcRequestBuilders.post(URI_NOTA_FISCAL)
+				MockMvcRequestBuilders.post(URI_CLIENTES)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(cliente))

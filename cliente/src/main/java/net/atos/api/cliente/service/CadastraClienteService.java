@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Set;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -32,6 +33,7 @@ public class CadastraClienteService {
 		this.clienteRepository = repository;
 	}
 	
+	@Transactional
 	public ClienteVO persistir(@NotNull(message = "Cliente não pode ser nulo") ClienteVO cliente) {
         
 		Set<ConstraintViolation<ClienteVO>>
@@ -43,7 +45,9 @@ public class CadastraClienteService {
 		
 		ClienteEntity clienteEntity = new ClienteFactory(cliente).toEntity();
 		
-		clienteRepository.save(clienteEntity);
+		//clienteRepository.save(clienteEntity);
+		clienteEntity = clienteRepository.save(clienteEntity);
+		
 		cliente.setId(clienteEntity.getId());
 
 		return cliente;
