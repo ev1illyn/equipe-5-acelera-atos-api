@@ -3,11 +3,11 @@ package net.atos.api.cliente.controller;
 import java.net.URI;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +45,7 @@ public class ClienteController {
 	}
 	
 	@GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON })
-	public ResponseEntity<ClienteVO> buscaClientePorId(@PathParam("id") Long id){
+	public ResponseEntity<ClienteVO> buscaClientePorId(@PathVariable("id") Long id){
 		
 		ClienteVO cliente = buscaClienteService.recuperarPorIdVO(id);
 		return ResponseEntity.ok(cliente);
