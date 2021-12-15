@@ -39,7 +39,7 @@ import net.atos.api.cliente.domain.TipoEndereco;
 @TestInstance(Lifecycle.PER_CLASS)
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
-class ClienteControllerIT {
+public class ClienteControllerIT {
 
 	private static final String URI_CLIENTES = "/v1/clientes";
 	
@@ -52,9 +52,7 @@ class ClienteControllerIT {
 	
 	//mockar
 	private MockMvc mockMvc;
-	
-	private Date data;
-	
+		
 	@BeforeAll
 	public void setup() {
 		
@@ -62,7 +60,6 @@ class ClienteControllerIT {
 	}
 
 	@Test
-	@Disabled
 	@DisplayName("Edita cliente")
 	public void test_editaCliente_retornoCriado() throws Exception {
 
@@ -150,13 +147,12 @@ class ClienteControllerIT {
 	}
 	
 	@Test
-	@Disabled
 	@DisplayName("Cadastra cliente e busca cliente")
 	public void test_cadastraCliente_retornoCriado() throws Exception {
 		
 		ClienteVO cliente = new ClienteVO();
 		
-		cliente.setNome("Loki da Silva Oliveira" + data.getTime());
+		cliente.setNome("Loki da Silva Oliveira");
 		cliente.setCpf("05362695860");
 		cliente.setRg("20556585221");
 		cliente.setNascimento(LocalDate.now());
@@ -220,13 +216,12 @@ class ClienteControllerIT {
 	}
 		
 	@Test
-	@Disabled
 	@DisplayName("Testa exclusão de cliente")
 	public void test_envioCamposSemDadosEdicaoCliente_retornaOk() throws Exception{
 
 		ClienteVO cliente = new ClienteVO();
 		
-		cliente.setNome("Loki da Silva Oliveira" + data.getTime());
+		cliente.setNome("Loki da Silva Oliveira");
 		cliente.setCpf("05362695860");
 		cliente.setRg("20556585221");
 		cliente.setNascimento(LocalDate.now());
@@ -288,7 +283,6 @@ class ClienteControllerIT {
 	}
 	
 	@Test
-	@Disabled
 	@DisplayName("Envio de cliente sem os campos obrigatórios")
 	public void test_envioCamposSemDadosCadastroCliente_retorna400() throws Exception {
 		 
@@ -306,7 +300,6 @@ class ClienteControllerIT {
 	}
 	
 	@Test
-	@Disabled
 	@DisplayName("Testa edição de cliente null")
 	public void test_envioCamposSemDadosEdicaoCliente_retorna400() throws Exception {
 		

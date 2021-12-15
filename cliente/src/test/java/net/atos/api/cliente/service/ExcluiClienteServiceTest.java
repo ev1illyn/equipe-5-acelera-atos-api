@@ -38,7 +38,7 @@ import net.atos.api.cliente.repository.entity.ClienteEntity;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
-class ExcluiClienteServiceTest {
+public class ExcluiClienteServiceTest {
 	
 	private Validator validator;
 	

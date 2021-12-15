@@ -1,5 +1,7 @@
 package net.atos.api.cliente.repository.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -12,7 +14,12 @@ import net.atos.api.cliente.domain.TipoEndereco;
 
 @Entity
 @Table(name = "TB_CLIENTE_ENDERECO")
-public class EnderecoEntity {
+public class EnderecoEntity implements Serializable{
+
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
 	private EnderecoPK id;

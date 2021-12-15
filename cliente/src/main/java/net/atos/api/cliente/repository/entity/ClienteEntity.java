@@ -1,5 +1,6 @@
 package net.atos.api.cliente.repository.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,12 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "TB_CLIENTE")
-public class ClienteEntity {
+public class ClienteEntity implements Serializable{
+
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "ID_CLIENTE")
@@ -119,10 +125,4 @@ public class ClienteEntity {
 		
 		this.enderecos = enderecos;
 	}
-	@Override
-	public String toString() {
-		return "ClienteEntity [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", rg=" + rg + ", nascimento="
-				+ nascimento + ", email=" + email + ", celular=" + celular + ", enderecos=" + enderecos + "]";
 	}
-	
-}
