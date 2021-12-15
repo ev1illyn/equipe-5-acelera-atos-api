@@ -70,9 +70,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
+				<!-- <configuration>
 					<jvmArguments>-Dfile.encoding=UTF8</jvmArguments>
-				</configuration>
+				</configuration> -->
 			</plugin>
 			
 			<plugin>

@@ -70,7 +70,7 @@ public class EditaClienteServiceTest {
 
 		this.clienteRepository = Mockito.mock(ClienteRepository.class);
 		
-		buscaClienteService = new BuscaClienteService(validator, clienteRepository);
+		buscaClienteService = new BuscaClienteService(clienteRepository);
 		editaClienteService = new EditaClienteService(validator, clienteRepository, buscaClienteService);
 	}
 

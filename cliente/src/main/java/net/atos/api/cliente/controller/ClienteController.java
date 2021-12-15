@@ -5,6 +5,10 @@ import java.net.URI;
 import javax.validation.Valid;
 import javax.ws.rs.core.MediaType;
 
+/*import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;*/
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,9 +64,20 @@ public class ClienteController {
 	public ResponseEntity<ClienteVO> buscaClientePorId(@PathVariable("id") Long id){
 		
 		ClienteVO cliente = buscaClienteService.recuperarPorIdVO(id);
+		
 		return ResponseEntity.ok(cliente);
 		
 	}
+	
+	/*
+	@GetMapping(produces = {MediaType.APPLICATION_JSON})
+	public ResponseEntity<Page<ClienteVO>> listaClientes(@PageableDefault(sort = {"nome"},
+		direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
+
+		Page<ClienteVO> clientesEncontrados = buscaClienteService.recuperarTodosVO(pageable);
+		
+		return ResponseEntity.ok(clientesEncontrados);
+	}*/
 	
 	@PatchMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON }, consumes = { MediaType.APPLICATION_JSON })
 	public ResponseEntity<ClienteVO> editaCliente(@Valid @PathVariable("id") Long id,
@@ -81,9 +96,9 @@ public class ClienteController {
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<ClienteVO> excluiCliente(@Valid @PathVariable("id") Long id) {
 		
-		ClienteVO clienteVO = excluiClienteService.remover(id);
+		excluiClienteService.remover(id);
 		
-		return ResponseEntity.ok(clienteVO);
+		return ResponseEntity.noContent().build();
 		
 	}
 

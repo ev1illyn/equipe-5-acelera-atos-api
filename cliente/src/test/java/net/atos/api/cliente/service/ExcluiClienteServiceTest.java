@@ -64,7 +64,7 @@ public class ExcluiClienteServiceTest {
 
 		this.clienteRepository = Mockito.mock(ClienteRepository.class);
 		
-		buscaClienteService = new BuscaClienteService(validator, clienteRepository);
+		buscaClienteService = new BuscaClienteService(clienteRepository);
 		excluiClienteService = new ExcluiClienteService(validator, clienteRepository,
 				buscaClienteService);
 		

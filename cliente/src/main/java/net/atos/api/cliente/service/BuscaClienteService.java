@@ -1,8 +1,11 @@
 package net.atos.api.cliente.service;
 
-import javax.validation.Validator;
 import javax.ws.rs.NotFoundException;
 
+/*import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;*/
 import org.springframework.stereotype.Service;
 
 import net.atos.api.cliente.domain.ClienteVO;
@@ -12,15 +15,10 @@ import net.atos.api.cliente.repository.entity.ClienteEntity;
 
 @Service
 public class BuscaClienteService {
-
-	private Validator validator;
-
+	
 	private ClienteRepository clienteRepository;
 
-	private ClienteEntity clienteEntity;
-
-	public BuscaClienteService(Validator validator, ClienteRepository repository) {
-		this.validator = validator;
+	public BuscaClienteService(ClienteRepository repository) {
 		this.clienteRepository = repository;
 	}
 
@@ -37,5 +35,24 @@ public class BuscaClienteService {
 		
 		
 	}
+	
+	/*
+	public Page<ClienteVO> recuperarTodosVO(Pageable pageable) {
+		
+		Page<ClienteEntity> clientesEncontrados = this.clienteRepository.findAll(pageable);
+		
+		if (clientesEncontrados.isEmpty()) {
+				throw new NotFoundException("Nenhum cliente encontrado");
+		}
+		
+		return new PageImpl<>(clientesEncontrados.getContent().stream()
+				.map(ClienteFactory::new)
+				.map(ClienteFactory::toVO)
+				.collect(Collectors.toList()), 
+				clientesEncontrados.getPageable(),
+				clientesEncontrados.getPageable().getOffset());
+		 
+	}
+	*/
 
 }

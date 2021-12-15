@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import javax.ws.rs.core.MediaType;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -273,7 +271,7 @@ public class ClienteControllerIT {
 				MockMvcRequestBuilders.delete(URI_CLIENTES.concat("/{id}"),
 					clienteCadastrado.getId()))
     				.andDo(print())
-    				.andExpect(status().isOk());
+    				.andExpect(status().isNoContent());
 
 		ClienteVO clienteDeletado = mapper.readValue(resultCreated
 				.andReturn()
@@ -317,4 +315,25 @@ public class ClienteControllerIT {
 		
 	}
 
+	/*
+	@Test
+	@DisplayName("Consulta todas os clientes")
+	public void test_consultaCliente_retornoOk() throws Exception {
+		
+		ResultActions resultConsulted = this.mockMvc.perform(
+				MockMvcRequestBuilders.get(URI_CLIENTES))
+    					.andDo(print())
+    					.andExpect(status().isOk());
+	
+		PaginatedResponse<ClienteVO> clientesConsultados = mapper.readValue(resultConsulted
+				.andReturn()
+				.getResponse()
+				.getContentAsString(), 
+				new TypeReference<PaginatedResponse<ClienteVO>>() {});
+		
+		System.out.println("clientesConsultados = " + clientesConsultados.toString());
+		assertNotNull(clientesConsultados);
+		
+	}*/
+	
 }
