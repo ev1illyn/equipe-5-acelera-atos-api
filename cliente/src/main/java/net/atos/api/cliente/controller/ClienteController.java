@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.service.BuscaClienteService;
 import net.atos.api.cliente.service.CadastraClienteService;
@@ -28,6 +30,7 @@ import net.atos.api.cliente.service.ExcluiClienteService;
 
 @RestController
 @RequestMapping("/v1/clientes")
+@Api(tags = "Clientes")
 public class ClienteController {
 
 	private CadastraClienteService cadastraClienteService;
@@ -48,6 +51,7 @@ public class ClienteController {
 	}
 	
 	@PostMapping(produces = {MediaType.APPLICATION_JSON}, consumes = {MediaType.APPLICATION_JSON})
+	@ApiOperation("Cadastra um cliente")
 	public ResponseEntity<ClienteVO> cadastraCliente(@Valid @RequestBody ClienteVO cliente) {
 		
 		ClienteVO clienteVO = cadastraClienteService.persistir(cliente);
@@ -59,8 +63,9 @@ public class ClienteController {
 		
 		return ResponseEntity.created(uri).body(clienteVO);
 	}
-	
+
 	@GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON })
+	@ApiOperation("Busca um cliente por Id")
 	public ResponseEntity<ClienteVO> buscaClientePorId(@PathVariable("id") Long id){
 		
 		ClienteVO cliente = buscaClienteService.recuperarPorIdVO(id);
@@ -71,6 +76,7 @@ public class ClienteController {
 	
 	/*
 	@GetMapping(produces = {MediaType.APPLICATION_JSON})
+	@ApiOperation("Lista todos os clientes")
 	public ResponseEntity<Page<ClienteVO>> listaClientes(@PageableDefault(sort = {"nome"},
 		direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
 
@@ -80,6 +86,7 @@ public class ClienteController {
 	}*/
 	
 	@PatchMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON }, consumes = { MediaType.APPLICATION_JSON })
+	@ApiOperation("Edita um cliente")
 	public ResponseEntity<ClienteVO> editaCliente(@Valid @PathVariable("id") Long id,
 			@Valid @RequestBody ClienteVO cliente) {
 		
@@ -94,6 +101,7 @@ public class ClienteController {
 	}
 
 	@DeleteMapping(value = "/{id}")
+	@ApiOperation("Exclui um cliente")
 	public ResponseEntity<ClienteVO> excluiCliente(@Valid @PathVariable("id") Long id) {
 		
 		excluiClienteService.remover(id);

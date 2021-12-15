@@ -50,7 +50,7 @@ public class BuscaClienteService {
 				.map(ClienteFactory::toVO)
 				.collect(Collectors.toList()), 
 				clientesEncontrados.getPageable(),
-				clientesEncontrados.getPageable().getOffset());
+				clientesEncontrados.getPageable().getTotalElements());
 		 
 	}
 	*/

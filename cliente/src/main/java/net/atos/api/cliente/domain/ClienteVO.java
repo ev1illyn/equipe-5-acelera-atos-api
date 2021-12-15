@@ -9,6 +9,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class ClienteVO {
 
 	private Long id;
@@ -24,6 +26,7 @@ public class ClienteVO {
 	private String rg;
 	
 	@NotNull(message = "Campo nascimento não pode ser nulo")
+	@JsonFormat(pattern="dd/MM/yyyy")
 	private LocalDate nascimento;
 	
 	@NotNull(message = "Campo email não pode ser nulo")
