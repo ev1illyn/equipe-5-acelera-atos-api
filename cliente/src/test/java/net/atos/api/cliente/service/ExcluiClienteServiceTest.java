@@ -1,12 +1,23 @@
 package net.atos.api.cliente.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Optional;
+
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import javax.ws.rs.NotFoundException;
+import javax.ws.rs.BadRequestException;
 
-import com.sun.jdi.LongValue;
-import net.atos.api.cliente.repository.entity.ClienteEntity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,32 +29,25 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import net.atos.api.cliente.domain.ClienteVO;
+import net.atos.api.cliente.domain.EnderecoVO;
+import net.atos.api.cliente.domain.TipoEndereco;
+import net.atos.api.cliente.factory.ClienteFactory;
 import net.atos.api.cliente.repository.ClienteRepository;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import net.atos.api.cliente.repository.entity.ClienteEntity;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
-class ExcluiClienteServiceTest {
+public class ExcluiClienteServiceTest {
 	
 	private Validator validator;
 	
 	private BuscaClienteService buscaClienteService;
 
 	private ExcluiClienteService excluiClienteService;
-
+	
 	@Mock
 	private ClienteRepository clienteRepository;
-
-	public ExcluiClienteServiceTest() {}
-
 
 	@BeforeAll
 	public void inicioGeral() {
@@ -59,41 +63,72 @@ class ExcluiClienteServiceTest {
 	public void iniciarCadaTeste() {
 
 		this.clienteRepository = Mockito.mock(ClienteRepository.class);
-
-		this.buscaClienteService = Mockito.mock(BuscaClienteService.class);
-
-		this.excluiClienteService = new ExcluiClienteService(this.validator,this.clienteRepository,this.buscaClienteService);
+		
+		buscaClienteService = new BuscaClienteService(clienteRepository);
+		excluiClienteService = new ExcluiClienteService(validator, clienteRepository,
+				buscaClienteService);
+		
 	}
 
 	@Test
-	@DisplayName("Testa se Cliente existe")
-	void test_Se_ClinteExiste_LancaExcecao() {
+	@DisplayName("Testa se id do Cliente é nulo")
+	void test_ClienteNulo_lancaExcecao() {
+
 		assertNotNull(excluiClienteService);
-
-		ClienteVO cliente = null;
-
-		var assertThrows = assertThrows(NullPointerException.class, ()->
-				excluiClienteService.excluir(cliente.getId()));
-
+		
+		Long clienteId = null;
+		
+		var assertThrows = assertThrows(BadRequestException.class, ()->
+			excluiClienteService.remover(clienteId));
+		
 		assertNotNull(assertThrows);
+		assertEquals(assertThrows.getMessage(),
+				"Identificador de exclusão do cliente inválido");
+		
 	}
-
+	
 	@Test
-	@DisplayName("testa delete Cliente")
-	public void test_Deleta_ClinteExistente_LancaExcecao() {
-		ClienteEntity clienteTreinado = new ClienteEntity();
-		clienteTreinado.setId(3l);
+	@DisplayName("Testa exclusão do Cliente")
+	void test_ClienteExcluido_retornaOk() {
+		
+		assertNotNull(excluiClienteService);
+		
+		Long clienteId = 123l;
+		ClienteVO cliente = new ClienteVO();
+		
+		cliente.setNome("Loki da Silva Oliveira");
+		cliente.setCpf("05362695860");
+		cliente.setRg("20556585221");
+		cliente.setNascimento(LocalDate.now());
+		cliente.setEmail("loki@gmail.com");
+		cliente.setCelular(899554415l);
+		cliente.setEnderecos(new ArrayList<EnderecoVO>());
+		
+		EnderecoVO endereco = new EnderecoVO();
+		endereco.setRua("rua do husky");
+		endereco.setNumero("123A");
+		endereco.setBairro("Benjamin Franklin");
+		endereco.setCidade("Cidade dos Anjos");
+		endereco.setUF("CE");
+		endereco.setPais("Brasil");
+		endereco.setCep(65625596);
+		endereco.setTelefone_fixo(835629566);
+		endereco.setTipoEndereco(TipoEndereco.COMERCIAL);
+		
+		cliente.add(endereco);
+				
+		ClienteEntity clienteEntity = new ClienteFactory(cliente).toEntity();
 
-		when(this.buscaClienteService.recuperarPorId(anyLong()))
-				.thenReturn(clienteTreinado);
+        when(clienteRepository.findById(clienteId))
+        	.thenReturn(Optional.of(clienteEntity));
+        
+        excluiClienteService.remover(clienteId);
+        
+		then(clienteRepository).should(times(1)).findById(anyLong());
+		then(clienteRepository).should(times(1)).deleteById(anyLong());
 
-		var assertThrows = assertThrows(Exception.class,
-				()-> this.excluiClienteService.excluir(Long.valueOf(3l)));
-
-		assertNotNull(assertThrows);
-		assertEquals("Deletado",assertThrows.getMessage());
-
-
+		assertNotNull(clienteId);
+		
 	}
-
+	
 }

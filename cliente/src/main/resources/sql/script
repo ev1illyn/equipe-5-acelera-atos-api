@@ -1,0 +1,12 @@
+//seleciona todas as colunas da tabela cliente e endereço pelo identificador do cliente
+SELECT * FROM TB_CLIENTE cliente, TB_CLIENTE_ENDERECO endereco
+WHERE cliente.id_cliente = endereco.id_cliente;
+
+//Insere cliente
+insert into tb_cliente
+ (celular_cliente, cpf_cliente, email_cliente, nascimento_cliente, nome_cliente, rg_cliente,
+  id_cliente) values (88988569562, '0595626305', 'evillyndsoliveiras@gmail.com', now(),
+   'Evillyn', 20895695222, 1);
+
+//consulta cliente
+select * from TB_CLIENTE cliente;

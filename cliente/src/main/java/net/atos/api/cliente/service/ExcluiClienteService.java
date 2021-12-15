@@ -1,18 +1,16 @@
 package net.atos.api.cliente.service;
 
-import javax.validation.Validator;
-import javax.ws.rs.NotFoundException;
+import java.util.Optional;
 
-import com.sun.jdi.LongValue;
-import net.atos.api.cliente.repository.entity.ClienteEntity;
+import javax.transaction.Transactional;
+import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.BadRequestException;
+
 import org.springframework.stereotype.Service;
 
 import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.repository.ClienteRepository;
-
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
 
 @Service
 public class ExcluiClienteService {
@@ -22,32 +20,24 @@ public class ExcluiClienteService {
 	private BuscaClienteService buscaClienteService;
 
 	public ExcluiClienteService(Validator validator, ClienteRepository clienteRepository,
-								BuscaClienteService buscaClienteService) {
+			BuscaClienteService buscaClienteService) {
 		this.validator = validator;
 		this.clienteRepository = clienteRepository;
 		this.buscaClienteService = buscaClienteService;
 	}
 
-	public void excluir(Long id) throws Exception {
+	@Transactional
+	public ClienteVO remover(@NotNull(message = "Id de exclusão inválido") Long clienteId) {
 
+		Optional.ofNullable(clienteId) 
+			.orElseThrow(()->new BadRequestException("Identificador de exclusão do cliente inválido"));
+		
+		ClienteVO clienteDeletado = buscaClienteService.recuperarPorIdVO(clienteId);
 
-		ClienteEntity clienteEcontrado =
-				this.buscaClienteService.recuperarPorId(id);
+		this.clienteRepository.deleteById(clienteId);
 
-
-		long idRecebido = clienteEcontrado.getId();
-
-		if ((idRecebido == id))  {
-			this.clienteRepository.deleteById(idRecebido);
-
-			ClienteEntity teste = this.buscaClienteService.recuperarPorId(id);
-			teste.getId();
-
-			throw new Exception("Deletado");
-
-			}
-		}
-
-
+		return clienteDeletado;
+		
+		
 	}
-
+}
