@@ -1,6 +1,7 @@
 package net.atos.api.cliente.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import javax.ws.rs.core.MediaType;
@@ -26,8 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.atos.api.cliente.controller.page.PaginatedResponse;
 import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.domain.EnderecoVO;
 import net.atos.api.cliente.domain.TipoEndereco;
@@ -114,13 +117,13 @@ public class ClienteControllerIT {
 		clienteCadastrado.setNome(clienteCadastrado.getNome() + "cliente editado, " + clienteCadastrado.getId());
     	
 		ResultActions resultEdited = this.mockMvc.perform(
-    			MockMvcRequestBuilders.patch(URI_CLIENTES.concat("/{id}"),
+    			MockMvcRequestBuilders.put(URI_CLIENTES.concat("/{id}"),
     			clienteCadastrado.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(clienteCadastrado))
     			).andDo(print())
-    			.andExpect(status().isCreated());
+    			.andExpect(status().isOk());
     	
     	ClienteVO clienteEditado = mapper.readValue(resultEdited
 				.andReturn()
@@ -305,7 +308,7 @@ public class ClienteControllerIT {
 		ClienteVO cliente = null;
 		
 		this.mockMvc.perform(
-    			MockMvcRequestBuilders.patch(URI_CLIENTES.concat("/{id}"),
+    			MockMvcRequestBuilders.put(URI_CLIENTES.concat("/{id}"),
     					idTeste)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -314,8 +317,7 @@ public class ClienteControllerIT {
     			.andExpect(status().isBadRequest());
 		
 	}
-
-	/*
+	
 	@Test
 	@DisplayName("Consulta todas os clientes")
 	public void test_consultaCliente_retornoOk() throws Exception {
@@ -334,6 +336,6 @@ public class ClienteControllerIT {
 		System.out.println("clientesConsultados = " + clientesConsultados.toString());
 		assertNotNull(clientesConsultados);
 		
-	}*/
+	}
 	
 }

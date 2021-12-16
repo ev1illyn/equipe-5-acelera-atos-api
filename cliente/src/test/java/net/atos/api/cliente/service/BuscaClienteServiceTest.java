@@ -1,10 +1,10 @@
 package net.atos.api.cliente.service;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -36,6 +36,7 @@ import org.springframework.data.domain.Pageable;
 import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.repository.ClienteRepository;
 import net.atos.api.cliente.repository.entity.ClienteEntity;
+import net.atos.api.cliente.service.BuscaClienteService;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -110,9 +111,8 @@ public class BuscaClienteServiceTest {
 		
 		assertEquals(idTeste, clienteEntity.getId());
 		
-	}
+	}	
 	
-	/*
 	@Test
 	@DisplayName("Testa quando encontra clientes cadastrados")
 	void test_consultaTodos_clientesCadastrados_retornaListaClientes() {
@@ -125,19 +125,17 @@ public class BuscaClienteServiceTest {
 		clientesTreinados.add(new ClienteEntity());
 		
 		Page<ClienteEntity> clientesPaginados = new PageImpl<>(clientesTreinados, this.pageable, 0l);
-
-		when(this.clienteRepository.findAll(any()))
-				.thenReturn(Optional.of(clientesTreinados));
+	
+		when(this.clienteRepository.findAll(any(Pageable.class)))
+				.thenReturn(clientesPaginados);
 
 		Page<ClienteVO> clientesEncontrados = this.buscaClienteService.recuperarTodosVO(this.pageable);
 		 
-		then(this.clienteRepository).should(times(1)).findAll(any());
+		then(this.clienteRepository).should(times(1)).findAll(any(Pageable.class));
 		
 		assertNotNull(clientesEncontrados);
 		assertEquals(3, clientesEncontrados.getSize());
-
 		
-	}*/
-	
+	}
 	
 }

@@ -1,11 +1,12 @@
 package net.atos.api.cliente.service;
 
+import java.util.stream.Collectors;
+
 import javax.ws.rs.NotFoundException;
 
-/*import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;*/
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import net.atos.api.cliente.domain.ClienteVO;
@@ -36,7 +37,7 @@ public class BuscaClienteService {
 		
 	}
 	
-	/*
+	
 	public Page<ClienteVO> recuperarTodosVO(Pageable pageable) {
 		
 		Page<ClienteEntity> clientesEncontrados = this.clienteRepository.findAll(pageable);
@@ -50,9 +51,8 @@ public class BuscaClienteService {
 				.map(ClienteFactory::toVO)
 				.collect(Collectors.toList()), 
 				clientesEncontrados.getPageable(),
-				clientesEncontrados.getPageable().getTotalElements());
+				clientesEncontrados.getTotalElements());
 		 
 	}
-	*/
 
 }

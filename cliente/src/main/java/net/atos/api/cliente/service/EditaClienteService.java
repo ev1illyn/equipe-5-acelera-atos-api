@@ -43,19 +43,17 @@ public class EditaClienteService {
 			throw new ConstraintViolationException("Cliente Inválido", validate);
 		}
 		
-		Optional.ofNullable(cliente.getId()) 
+		cliente.setId(clienteId);
+		
+		Optional.ofNullable(clienteId) 
 			.orElseThrow(()->new BadRequestException("Identificador de cliente inválido"));
 		
 		buscaClienteService.recuperarPorId(clienteId);
-
-		cliente.setId(clienteId);
 		
 		ClienteEntity clienteEntity = new ClienteFactory(cliente).toEntity();
 			
 		clienteRepository.save(clienteEntity);
-		
-		//cliente.setId(clienteEntity.getId());
-		
+				
 		return cliente;
 	}
 
