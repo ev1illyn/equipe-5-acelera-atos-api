@@ -11,8 +11,8 @@ import io.swagger.v3.oas.annotations.Parameters;
 @Target({ ElementType.METHOD, ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Parameters({
-	@Parameter(name = "page", required = false, example = "123"),
-	@Parameter(name = "size",  required = false, example = "123"),
+	@Parameter(name = "páginas", required = false, example = "123"),
+	@Parameter(name = "tamanho",  required = false, example = "123"),
         })
 public @interface PageableBinding {
 

@@ -32,12 +32,12 @@ public class SwaggerConfig implements WebMvcConfigurer {
 	  @Bean
 	  public OpenAPI springShopOpenAPI() {
 	      return new OpenAPI()
-	              .info(new Info().title("Nota Fiscal API")
-	              .description("Criação de documentos fiscais")
+	              .info(new Info().title("Clientes API")
+	              .description("Cadastro de Clientes")
 	              .version("v0.0.1")
 	              .license(new License().name("Apache 2.0").url("http://springdoc.org")))
 	              .externalDocs(new ExternalDocumentation()
-	              .description("Nota Fiscal Documentação")
+	              .description("Clientes Documentação")
 	              .url("https://www.exemplo/docs"));
 	  }
 
