@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import javax.ws.rs.core.MediaType;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -319,6 +320,7 @@ public class ClienteControllerIT {
 	}
 	
 	@Test
+	@Disabled
 	@DisplayName("Consulta todas os clientes")
 	public void test_consultaCliente_retornoOk() throws Exception {
 		
