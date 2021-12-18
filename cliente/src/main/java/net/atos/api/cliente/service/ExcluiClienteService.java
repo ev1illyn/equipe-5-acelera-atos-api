@@ -7,12 +7,10 @@ import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.BadRequestException;
 
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import net.atos.api.cliente.domain.ClienteVO;
-import net.atos.api.cliente.events.ClienteCreatedEvent;
 import net.atos.api.cliente.events.ClienteDeletedEvent;
 import net.atos.api.cliente.repository.ClienteRepository;
 
