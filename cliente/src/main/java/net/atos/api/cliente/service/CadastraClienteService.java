@@ -9,23 +9,30 @@ import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.NotFoundException;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import net.atos.api.cliente.domain.ClienteVO;
+import net.atos.api.cliente.events.ClienteCreatedEvent;
 import net.atos.api.cliente.factory.ClienteFactory;
 import net.atos.api.cliente.repository.ClienteRepository;
 import net.atos.api.cliente.repository.entity.ClienteEntity;
 
 @Service
 public class CadastraClienteService {
-
+	
 	private Validator validator;
 	
 	private ClienteRepository clienteRepository;
 	
-	public CadastraClienteService(Validator validator, ClienteRepository repository) {
+	private ApplicationEventPublisher eventPublisher;
+	
+	public CadastraClienteService(Validator validator, ClienteRepository repository, 
+			ApplicationEventPublisher eventPublisher) {
 		this.validator = validator;
 		this.clienteRepository = repository;
+		this.eventPublisher = eventPublisher;
+		
 	}
 	
 	@Transactional
@@ -43,6 +50,10 @@ public class CadastraClienteService {
 		clienteEntity = clienteRepository.save(clienteEntity);
 		
 		cliente.setId(clienteEntity.getId());
+		
+		var clienteCreatedEvent = new ClienteCreatedEvent(cliente);
+		
+		this.eventPublisher.publishEvent(clienteCreatedEvent);
 
 		return cliente;
 		

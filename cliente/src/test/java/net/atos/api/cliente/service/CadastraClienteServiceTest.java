@@ -25,6 +25,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 
 import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.domain.EnderecoVO;
@@ -40,14 +42,17 @@ import static org.mockito.Mockito.any;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(Lifecycle.PER_CLASS)
 public class CadastraClienteServiceTest {
-
+	
 	private CadastraClienteService cadastraClienteService;
 	
 	private Validator validator;
 	
 	@Mock
 	private ClienteRepository clienteRepository;
-		
+	
+	private ApplicationEventPublisher eventPublisher;
+
+	@DisplayName("Teste executado antes de todos os testes")
 	@BeforeAll
 	public void inicioGeral() {
 		
@@ -63,7 +68,9 @@ public class CadastraClienteServiceTest {
 		
 		this.clienteRepository = Mockito.mock(ClienteRepository.class);
 		
-		cadastraClienteService = new CadastraClienteService(validator, clienteRepository);
+		this.eventPublisher = Mockito.mock(ApplicationEventPublisher.class);
+		
+		cadastraClienteService = new CadastraClienteService(validator, clienteRepository, this.eventPublisher);
 	}
 		
 	@Test

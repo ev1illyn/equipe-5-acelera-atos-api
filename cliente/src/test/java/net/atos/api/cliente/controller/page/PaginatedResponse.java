@@ -10,10 +10,14 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PaginatedResponse<T> extends PageImpl<T> {
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public PaginatedResponse(@JsonProperty("content") List<T> content,
                              @JsonProperty("number") int number,
                              @JsonProperty("size") int size,

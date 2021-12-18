@@ -48,16 +48,14 @@ public class ClienteControllerIT {
 	@Autowired
 	private WebApplicationContext wac;
 
-	//transforma objeto em json e vice-versa
+	//transforma vo em json e vice-versa
 	@Autowired
 	private ObjectMapper mapper;
 	
-	//mockar
 	private MockMvc mockMvc;
 		
 	@BeforeAll
 	public void setup() {
-		
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 

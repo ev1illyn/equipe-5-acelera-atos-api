@@ -10,6 +10,6 @@ import net.atos.api.cliente.repository.entity.ClienteEntity;
 @Repository
 public interface ClienteRepository extends PagingAndSortingRepository<ClienteEntity, Long>{
 	
-	public Optional<ClienteEntity> findById(Long idCliente);
+	public Optional<ClienteEntity> findById(Long idOrdemServico);
 		
 }

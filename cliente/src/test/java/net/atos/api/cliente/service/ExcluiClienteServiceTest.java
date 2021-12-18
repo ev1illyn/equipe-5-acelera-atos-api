@@ -28,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import net.atos.api.cliente.domain.ClienteVO;
 import net.atos.api.cliente.domain.EnderecoVO;
@@ -48,6 +49,8 @@ public class ExcluiClienteServiceTest {
 	
 	@Mock
 	private ClienteRepository clienteRepository;
+	
+	private ApplicationEventPublisher eventPublisher;
 
 	@BeforeAll
 	public void inicioGeral() {
@@ -63,10 +66,11 @@ public class ExcluiClienteServiceTest {
 	public void iniciarCadaTeste() {
 
 		this.clienteRepository = Mockito.mock(ClienteRepository.class);
+		this.eventPublisher = Mockito.mock(ApplicationEventPublisher.class);
 		
 		buscaClienteService = new BuscaClienteService(clienteRepository);
 		excluiClienteService = new ExcluiClienteService(validator, clienteRepository,
-				buscaClienteService);
+				buscaClienteService, eventPublisher);
 		
 	}
 
